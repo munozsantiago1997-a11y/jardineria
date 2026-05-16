@@ -224,9 +224,164 @@
         .faq-item.active .faq-icon {
             transform: rotate(45deg);
         }
+
+        /* Chatbot Styles */
+        #chatbot-container {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 320px;
+            height: 450px;
+            background: white;
+            border: 4px solid black;
+            box-shadow: 8px 8px 0px black;
+            display: flex;
+            flex-direction: column;
+            z-index: 102;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            transform-origin: bottom right;
+        }
+
+        @media (min-width: 768px) {
+            #chatbot-container {
+                right: 30px;
+                bottom: 100px;
+                width: 350px;
+            }
+        }
+
+        .chatbot-hidden {
+            transform: scale(0);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .chatbot-header {
+            background: var(--logo-green);
+            padding: 15px;
+            border-bottom: 4px solid black;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .close-btn {
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            font-weight: 900;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .chatbot-messages {
+            flex-grow: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background: #f9f9f9;
+        }
+
+        .message {
+            padding: 10px 15px;
+            border: 2px solid black;
+            font-weight: bold;
+            font-size: 14px;
+            max-width: 85%;
+            word-wrap: break-word;
+        }
+
+        .bot-message {
+            background: white;
+            align-self: flex-start;
+            border-radius: 10px 10px 10px 0;
+        }
+
+        .user-message {
+            background: var(--logo-orange);
+            align-self: flex-end;
+            border-radius: 10px 10px 0 10px;
+            text-align: right;
+        }
+
+        .chatbot-input {
+            padding: 15px;
+            border-top: 4px solid black;
+            background: white;
+        }
+
+        .chatbot-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .chatbot-option-btn {
+            background: white;
+            border: 2px solid black;
+            padding: 10px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 2px 2px 0px black;
+            text-align: left;
+        }
+
+        .chatbot-option-btn:hover {
+            background: var(--logo-green);
+            transform: translate(-1px, -1px);
+            box-shadow: 3px 3px 0px black;
+        }
+        
+        .whatsapp-link-btn {
+            display: block;
+            background: var(--logo-orange);
+            border: 2px solid black;
+            padding: 12px;
+            text-align: center;
+            font-weight: 900;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: black;
+            box-shadow: 4px 4px 0px black;
+            margin-top: 10px;
+            transition: all 0.2s;
+        }
+        
+        .whatsapp-link-btn:hover {
+            background: #e6a84f;
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px black;
+        }
     </style>
 </head>
 <body>
+
+    <!-- Chatbot Widget -->
+    <div id="chatbot-container" class="chatbot-hidden">
+        <div class="chatbot-header">
+            <span>Chat with Us</span>
+            <button onclick="toggleChatbot()" class="close-btn">&times;</button>
+        </div>
+        <div class="chatbot-messages" id="chatbot-messages">
+            <!-- Messages will be injected here by JS -->
+        </div>
+        <div class="chatbot-input">
+            <div id="chatbot-options" class="chatbot-options">
+                <!-- Options will be injected here by JS -->
+            </div>
+            <div id="chatbot-text-input" class="hidden mt-4 flex gap-2">
+                <input type="text" id="ai-input" placeholder="Ask anything..." class="flex-grow border-2 border-black p-2 text-xs font-bold focus:outline-none focus:border-[#82e461]">
+                <button onclick="sendAiMessage()" class="bg-black text-white px-3 py-2 font-black text-[10px] uppercase hover:bg-[#82e461] hover:text-black transition-colors">Ask</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Floating Contact Group -->
     <div class="floating-contact">
@@ -236,12 +391,12 @@
         <a href="sms:0468379904" class="float-btn" title="Send SMS" style="background-color: var(--logo-orange);">
             <svg viewBox="0 0 24 24"><path d="M20,2H4A2,2 0 0,0 2,4V22L6,18H20A2,2 0 0,0 22,16V4A2,2 0 0,0 20,2M20,16H5.17L4,17.17V4H20V16Z"/></svg>
         </a>
-        <a href="https://wa.me/61468379904" target="_blank" class="float-btn" title="WhatsApp" style="background-color: var(--logo-green);">
-            <svg viewBox="0 0 24 24"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.66 20.15 9.3 19.8 8.1 19.14L7.81 18.98L4.69 19.8L5.52 16.73L5.34 16.44C4.61 15.28 4.22 13.87 4.22 11.91C4.22 7.38 7.73 3.67 12.05 3.67M9.36 7.41C9.19 7.41 8.93 7.47 8.7 7.72C8.47 7.97 7.83 8.57 7.83 9.79C7.83 11.01 8.72 12.19 8.84 12.35C8.96 12.51 10.55 15.08 13.08 16.1C13.68 16.34 14.15 16.49 14.51 16.61C15.12 16.8 15.67 16.77 16.11 16.71C16.6 16.63 17.62 16.08 17.83 15.47C18.04 14.86 18.04 14.34 17.98 14.23C17.92 14.13 17.76 14.07 17.52 13.95C17.27 13.83 16.05 13.23 15.83 13.15C15.6 13.07 15.44 13.03 15.27 13.27C15.11 13.52 14.65 14.07 14.51 14.23C14.37 14.39 14.23 14.41 13.98 14.29C13.74 14.17 12.96 13.91 12.04 13.09C11.32 12.45 10.83 11.66 10.69 11.42C10.55 11.17 10.67 11.04 10.79 10.92C10.9 10.8 11.04 10.62 11.16 10.47C11.28 10.32 11.32 10.21 11.4 10.05C11.48 9.89 11.44 9.75 11.38 9.62C11.32 9.5 10.84 8.33 10.64 7.85C10.45 7.37 10.25 7.43 10.11 7.43C9.97 7.43 9.81 7.41 9.36 7.41Z"/></svg>
-        </a>
         <a href="mailto:Services@greenandgroom.com.au" class="float-btn" title="Email Us">
             <svg viewBox="0 0 24 24"><path d="M20,8L12,13L4,8V6L12,11L20,6M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4Z"/></svg>
         </a>
+        <button id="chatbot-launcher" class="float-btn" onclick="toggleChatbot()" title="Chat with us" style="background-color: var(--logo-green);">
+            <svg viewBox="0 0 24 24"><path d="M12 3C6.48 3 2 6.8 2 11.5C2 14.16 3.4 16.53 5.6 18.06V22L9.23 19.82C10.12 20.03 11.04 20.14 12 20.14C17.52 20.14 22 16.34 22 11.64C22 6.8 17.52 3 12 3M12 18.14C11.14 18.14 10.3 18.04 9.47 17.84L9.14 17.76L6.5 19.34L6.68 16.4L6.44 16.23C4.54 14.86 3.5 13.25 3.5 11.5C3.5 7.9 7.32 5 12 5C16.68 5 20.5 7.9 20.5 11.5C20.5 15.1 16.68 18.14 12 18.14Z"/></svg>
+        </button>
     </div>
 
     <!-- Navigation -->
@@ -470,6 +625,146 @@
             });
             element.classList.toggle('active');
         }
+
+        // Chatbot Logic
+        let geminiApiKey = ""; // USER: INSERT YOUR API KEY HERE
+        let aiMode = false;
+
+        function toggleChatbot() {
+            const container = document.getElementById('chatbot-container');
+            container.classList.toggle('chatbot-hidden');
+            if(!container.classList.contains('chatbot-hidden') && document.getElementById('chatbot-messages').innerHTML.trim() === "") {
+                initChatbot();
+            }
+        }
+
+        function initChatbot() {
+            addBotMessage("Hi there! 👋 Welcome to Green & Groom. How can I help you today?");
+            showOptions([
+                { text: "🌿 Gardening & Exterior", value: "gardening" },
+                { text: "🧹 Cleaning & Interior", value: "cleaning" },
+                { text: "💡 Brainstorm with Gemini AI", value: "ai" }
+            ]);
+        }
+
+        function addBotMessage(text) {
+            const messagesDiv = document.getElementById('chatbot-messages');
+            const msgEl = document.createElement('div');
+            msgEl.className = 'message bot-message';
+            msgEl.innerHTML = text;
+            messagesDiv.appendChild(msgEl);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function addUserMessage(text) {
+            const messagesDiv = document.getElementById('chatbot-messages');
+            const msgEl = document.createElement('div');
+            msgEl.className = 'message user-message';
+            msgEl.textContent = text;
+            messagesDiv.appendChild(msgEl);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        function showOptions(options) {
+            const optionsDiv = document.getElementById('chatbot-options');
+            optionsDiv.innerHTML = '';
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'chatbot-option-btn';
+                btn.textContent = opt.text;
+                btn.onclick = () => handleOptionClick(opt);
+                optionsDiv.appendChild(btn);
+            });
+        }
+
+        function handleOptionClick(opt) {
+            addUserMessage(opt.text);
+            document.getElementById('chatbot-options').innerHTML = '';
+            
+            if (opt.value === 'ai') {
+                startAiMode();
+            } else {
+                setTimeout(() => {
+                    addBotMessage("Great! To give you the best service and a quick quote, please chat with us directly on WhatsApp.");
+                    showWhatsAppButton();
+                }, 800);
+            }
+        }
+
+        function showWhatsAppButton() {
+            const optionsDiv = document.getElementById('chatbot-options');
+            const container = document.createElement('div');
+            container.innerHTML = `
+                <a href="https://wa.me/61468379904" target="_blank" class="whatsapp-link-btn">
+                    Chat on WhatsApp
+                </a>
+                <button onclick="initChatbot()" class="text-[10px] font-bold uppercase mt-4 block mx-auto hover:underline">← Back to start</button>
+            `;
+            optionsDiv.appendChild(container);
+        }
+
+        function startAiMode() {
+            aiMode = true;
+            addBotMessage("Excellent choice! I'm now in **Brainstorm Mode**. I've analyzed this website and can help you plan your property maintenance.");
+            addBotMessage("Ask me anything about our services or for ideas on how to improve your property!");
+            document.getElementById('chatbot-text-input').classList.remove('hidden');
+        }
+
+        async function sendAiMessage() {
+            const inputEl = document.getElementById('ai-input');
+            const query = inputEl.value.trim();
+            if (!query) return;
+
+            addUserMessage(query);
+            inputEl.value = '';
+
+            const loadingId = "loading-" + Date.now();
+            addBotMessage(`<span id="${loadingId}">Gemini is thinking...</span>`);
+
+            try {
+                const response = await callGemini(query);
+                document.getElementById(loadingId).parentElement.innerHTML = response;
+            } catch (error) {
+                console.error(error);
+                document.getElementById(loadingId).parentElement.innerHTML = "Sorry, I'm having trouble connecting to my brain right now. Please make sure the API Key is set in the code or try again later.";
+            }
+        }
+
+        async function callGemini(prompt) {
+            // If no API key, return a mock response for demonstration
+            if (!geminiApiKey || geminiApiKey === "") {
+                return "I'm ready to brainstorm! To enable my full AI potential, please add your Gemini API Key to the code in `index.html`. <br><br> For now, I can tell you that we specialize in **Strata** and **Residential** complexes in Bayside Melbourne.";
+            }
+
+            try {
+                const { GoogleGenerativeAI } = await import("https://esm.run/@google/generative-ai");
+                const genAI = new GoogleGenerativeAI(geminiApiKey);
+                const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+                const pageContext = document.body.innerText.substring(0, 5000); // Send first 5k chars
+                const fullPrompt = `You are a professional property maintenance assistant for "Green & Groom". 
+                Based on this website content:
+                ---
+                ${pageContext}
+                ---
+                The user wants to brainstorm ideas. Please provide helpful, professional, and creative advice. 
+                Keep responses concise and formatted for a small chat window.
+                User says: ${prompt}`;
+
+                const result = await model.generateContent(fullPrompt);
+                const response = await result.response;
+                return response.text().replace(/\n/g, '<br>');
+            } catch (e) {
+                throw e;
+            }
+        }
+
+        // Add Enter key listener for AI input
+        document.getElementById('ai-input')?.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                sendAiMessage();
+            }
+        });
     </script>
 
 </body>
